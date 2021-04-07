@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.direct.project.dao.LicenceCodeDao">
+
+    <resultMap  id="BaseResult" type="com.direct.project.dto.LicenceCodeDTO">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="user" column="user"/>
+        <result property="userMail" column="user_mail"/>
+        <result property="billId" column="bill_id"/>
+        <result property="deviceCode" column="device_code"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="java.util.List">
+        insert into licence_code(code, user, user_mail, bill_id, device_code)
+        VALUES
+        <foreach collection="lcodes" item="item" separator=",">
+            (#{item.code}, #{item.user}, #{item.userMail}, #{item.billId}, #{item.deviceCode})
+        </foreach>
+    </insert>
+
+
+    <select id="countByUser" resultType="java.lang.Integer">
+        select count(*)
+        from licence_code
+        where
+            user = #{user}
+    </select>
+
+    <delete id="deleteByUser">
+        select count(*)
+        from licence_code
+        where
+            user = #{user}
+    </delete>
+
+
+    <select id="queryLiceneCodeForUpdate" resultMap="BaseResult">
+        select * from licence_code
+        WHERE
+            user = #{user}
+            AND
+            device_code is null
+            order by create_time desc
+        FOR UPDATE
+    </select>
+
+    <select id="queryEarliestLiceneCode" resultMap="BaseResult">
+        select * from licence_code
+        where
+            user = #{user}
+            AND
+            device_code is not null
+            order by update_time desc
+    </select>
+
+    <update id="bindLiceneCode">
+        update licence_code
+        set device_code = #{deviceCode}
+        WHERE
+            user = #{user}
+    </update>
+
+</mapper>

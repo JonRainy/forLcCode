@@ -1,0 +1,30 @@
+
+logging:
+  level:
+    root: info
+
+server:
+  port: 8080
+  session:
+    timeout: 10
+  tomcat:
+    uri-encoding: UTF-8
+
+mybatis:
+  mapper-locations: classpath:com/direct/project/mapper/*.xml
+
+
+
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf-8
+    username : root
+    password : New_password_123_.
+
+
+
+email:
+  key: 5e061800f254dc24fa8c32ccb5bc11ee-6f4beb0a-affc6d71
+  from: ipin@sandbox67876f54a51e4365922669940bfce26b.mailgun.org.com
+  domain: sandbox67876f54a51e4365922669940bfce26b.mailgun.org

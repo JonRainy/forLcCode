@@ -1,0 +1,14 @@
+create table licence_code (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  code char(40) NOT NULL,
+  user VARCHAR(100) NOT NULL,
+  user_mail VARCHAR(100) NOT NULL,
+  bill_id VARCHAR(50),
+  device_code VARCHAR(50) DEFAULT NULL,
+  create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  PRIMARY KEY(id),
+  UNIQUE KEY(user, code),
+  Key (user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
