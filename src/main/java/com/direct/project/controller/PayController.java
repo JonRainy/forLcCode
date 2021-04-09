@@ -57,13 +57,15 @@ public class PayController {
             Map<String, String> map,
             HttpServletResponse response
     ) throws StripeException {
-        ChargeCreateParams chargeCreateParams = new ChargeCreateParams.Builder()
-                .setAmount(Long.decode(map.get("price")))
-                .setCurrency("hkd")
-                .setSource(map.get("id"))
-                .setReceiptEmail(jedis.get(map.get("id")))
-                .build();
-        Charge charge = Charge.create(chargeCreateParams);
+
+        ChargeCreateParams.Builder chargeBuild = new ChargeCreateParams.Builder();
+        chargeBuild.setCurrency("hkd").setSource(map.get("id"));
+
+        if (jedis.get(map.get("id")) != null) {
+            chargeBuild.setReceiptEmail(jedis.get(map.get("id")));
+        }
+
+        Charge charge = Charge.create(chargeBuild.build());
 
         Map<String, Object> responseData = new HashMap<>();
         response.setStatus(200);
