@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RestController
 public class PayController {
 
+    static Jedis jedis = new Jedis("127.0.0.1", 6379);
     static {
         Stripe.apiKey = "sk_test_51IMarYLsuGPYGhOQBpcFbzA4eeDgSAeXTgWaVvBZGQ1dZNjmo2Gv9FBTkXeyxFLHAnZ9j3vPv13iovwIFRsBcxNe008A5WudVI";
     }
@@ -42,6 +44,14 @@ public class PayController {
         return charge(map, response);
     }
 
+    @ResponseBody
+    @PostMapping(value = {"/source/email"})
+    public void sourceEmail(
+            @RequestBody Map<String, String> map
+    ) throws StripeException {
+        jedis.set(map.get("id"), map.get("email"));
+    }
+
 
     public Map<String, Object> charge(
             Map<String, String> map,
@@ -51,6 +61,7 @@ public class PayController {
                 .setAmount(Long.decode(map.get("price")))
                 .setCurrency("hkd")
                 .setSource(map.get("id"))
+                .setReceiptEmail(jedis.get(map.get("id")))
                 .build();
         Charge charge = Charge.create(chargeCreateParams);
 
